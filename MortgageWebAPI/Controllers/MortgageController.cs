@@ -37,7 +37,7 @@ namespace MortgageWebAPI.Controllers
             var res = _mortgageService.CheckMortgage(model.Income, model.MaturityPeriod, model.LoanValue, model.HomeValue);
             if (res == null)
             {
-                return NotFound();
+                return NotFound("Mortgage rate not found.");
             }
 
             return Ok(new MortgageCheckViewModel {IsFeasible = res.IsFeasible, MonthlyCost = res.MonthlyCost});
