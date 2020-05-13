@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MortgageWebAPI", "MortgageWebAPI\MortgageWebAPI.csproj", "{302FE44A-F94D-47F9-BEAE-981435962A05}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MortgageWebAPITest", "MortgageWebAPITest\MortgageWebAPITest.csproj", "{5BDE18F2-7F8D-411A-9732-BC5D683510C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MortgageWebAPITest", "MortgageWebAPI.Tests\MortgageWebAPITest.csproj", "{5BDE18F2-7F8D-411A-9732-BC5D683510C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
