@@ -34,12 +34,11 @@ namespace MortgageWebAPI.Services
             if (rate == null)
                 return null;
 
-            var mi = rate.InterestRate / 12 / 100;
-            var n = maturityPeriod * 12;
-            var monthlyCost = loanValue * (mi / (1 - Math.Pow(mi + 1, -n)));
-            var mortgageLoan = monthlyCost * n;
+            var monthlyCost = calculateMonthlyCost(maturityPeriod, rate.InterestRate, loanValue);
 
-            if (mortgageLoan > homeValue || mortgageLoan > (4 * income))
+            var isFeasible = checkFeasibility(monthlyCost, maturityPeriod, homeValue, income);
+
+            if (!isFeasible)
             {
                 return new MortgageCheckDto
                 {
@@ -52,6 +51,37 @@ namespace MortgageWebAPI.Services
                 IsFeasible = true,
                 MonthlyCost = monthlyCost
             };
+        }
+
+        private double calculateMonthlyCost(int maturityPeriod, double interestRate, double loanValue)
+        {
+            // https://en.wikipedia.org/wiki/Mortgage_calculator#Monthly_payment_formula
+            
+            // n - the number of monthly payments, called the loan's term
+            var n = maturityPeriod * 12;
+            
+            // mi - the monthly interest rate, expressed as a decimal, not a percentage.
+            var mi = interestRate / 12 / 100;
+
+            double monthlyCost;
+            if (Math.Abs(interestRate) < 0.00001)
+            {
+                // interest rate equals 0 case
+                monthlyCost = loanValue / n;
+            }
+            else
+            {
+                monthlyCost = loanValue * (mi / (1 - Math.Pow(mi + 1, -n)));
+            }
+
+            return monthlyCost;
+        }
+
+        private bool checkFeasibility(double monthlyCost, int maturityPeriod, double homeValue, double income)
+        {
+            var mortgageLoan = monthlyCost * maturityPeriod * 12;
+
+            return mortgageLoan <= homeValue && mortgageLoan <= (4 * income);
         }
     }
 }

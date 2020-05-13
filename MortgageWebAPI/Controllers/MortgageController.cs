@@ -32,11 +32,15 @@ namespace MortgageWebAPI.Controllers
         
         [HttpPost]
         [Route("mortgage-check")]
-        public MortgageCheckViewModel MortgageCheck([FromBody] MortgageCheckApiModel model)
+        public IActionResult MortgageCheck([FromBody] MortgageCheckApiModel model)
         {
             var res = _mortgageService.CheckMortgage(model.Income, model.MaturityPeriod, model.LoanValue, model.HomeValue);
+            if (res == null)
+            {
+                return NotFound("Mortgage rate not found.");
+            }
 
-            return new MortgageCheckViewModel {IsFeasible = res.IsFeasible, MonthlyCost = res.MonthlyCost};
+            return Ok(new MortgageCheckViewModel {IsFeasible = res.IsFeasible, MonthlyCost = res.MonthlyCost});
         }
     }
 }

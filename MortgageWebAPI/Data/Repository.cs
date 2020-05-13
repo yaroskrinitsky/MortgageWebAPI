@@ -16,13 +16,13 @@ namespace MortgageWebAPI.Data
     
     public class GenericRepository<T> : IRepository<T> where T : class
     {
-        private MortgageDbContext _context = null;
+        private DbContext _context = null;
         private DbSet<T> table = null;
  
-        public GenericRepository(MortgageDbContext _context)
+        public GenericRepository(DbContext context)
         {
-            this._context = _context;
-            table = _context.Set<T>();
+            this._context = context;
+            table = context.Set<T>();
         }
         public virtual IEnumerable<T> GetAll()
         {

@@ -11,13 +11,22 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Data\Configuration" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Remove="Data\IMortgageDbContext.cs" />
       <Compile Remove="Data\IRepository.cs" />
       <Compile Remove="WeatherForecast.cs" />
+      <Compile Remove="Data\Configuration\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Data\Configuration\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Data\Configuration\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Data\Configuration\**" />
     </ItemGroup>
 
 

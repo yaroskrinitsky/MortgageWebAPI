@@ -42,8 +42,6 @@ namespace MortgageWebAPI
             services.AddScoped<IMortgageService, MortgageService>();
             services.AddScoped<IRepository<MortgageRate>, MortgageRateRepository>();
             
-            //services.AddScoped<IMortgateRepository, MortgageRateRepository>();
-            
             using var provider = services.BuildServiceProvider();
             provider.GetService<MortgageDbContext>().Seed();
         }
@@ -51,9 +49,6 @@ namespace MortgageWebAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-           // var context = app.ApplicationServices.GetService<MortgageDbContext>();
-           // context.Seed();
-            
             if (env.IsDevelopment())
             {
                 app.UseSwagger();
