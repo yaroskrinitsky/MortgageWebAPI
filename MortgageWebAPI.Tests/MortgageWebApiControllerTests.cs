@@ -14,6 +14,12 @@ namespace MortgageWebAPITest
 {
     public class MortgageWebApiControllerTests
     {
+        IMortgageService _service;
+
+        public MortgageWebApiControllerTests()
+        {
+            this._service = new MortgageServiceMock();
+        }
         class MortgageServiceMock : IMortgageService
         {
             public IReadOnlyCollection<MortgageRateDto> GetMortgageRates()
@@ -48,8 +54,7 @@ namespace MortgageWebAPITest
         [Fact]
         public void InterestRates_ReturnsRatesList()
         {
-            var mortgageServiceMock = new MortgageServiceMock();
-            var controller = new MortgageController(mortgageServiceMock);
+            var controller = new MortgageController(this._service);
             var response = controller.InterestRates();
 
             Assert.True(response != null || response!.Count() == 2);
@@ -58,8 +63,7 @@ namespace MortgageWebAPITest
         [Fact]
         public void MortgageCheck_Returns404IfNoSuchMaturityPeriod()
         {
-            var mortgageServiceMock = new MortgageServiceMock();
-            var controller = new MortgageController(mortgageServiceMock);
+            var controller = new MortgageController(this._service);
             var response = controller.MortgageCheck(new MortgageCheckApiModel
             {
                 MaturityPeriod = 99
@@ -72,8 +76,7 @@ namespace MortgageWebAPITest
         [Fact]
         public void MortgageCheck_ReturnsFeasibilityAndMonthlyCost()
         {
-            var mortgageServiceMock = new MortgageServiceMock();
-            var controller = new MortgageController(mortgageServiceMock);
+            var controller = new MortgageController(this._service);
             var response = controller.MortgageCheck(new MortgageCheckApiModel{MaturityPeriod = 1}) as ObjectResult;
             
             Assert.NotNull(response);
