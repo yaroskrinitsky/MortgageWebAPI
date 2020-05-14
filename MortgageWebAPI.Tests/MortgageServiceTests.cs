@@ -10,23 +10,12 @@ namespace MortgageWebAPITest
 {
     public class MortgageServiceTests
     {
-        IMortgageService _service;
-
         public MortgageServiceTests()
         {
-            var options = new DbContextOptionsBuilder<MortgageDbContext>().UseInMemoryDatabase(databaseName:"MortgageDbTest").Options;
-            var dbContext = new MortgageDbContext(options);
-            Seed(dbContext);
             
-            this._service = new MortgageService(new MortgageRateRepository(dbContext));
         }
         void Seed(MortgageDbContext context)
         {
-            if (context.MortgageRates.Any())
-            {
-                return;
-            }
-            
             context.MortgageRates.AddRange(
                 new MortgageRate
                 {
@@ -108,7 +97,13 @@ namespace MortgageWebAPITest
         [Fact]
         public void GetMortgageRates_ReturnsRatesList()
         {
-            var rates = this._service.GetMortgageRates();
+            var options = new DbContextOptionsBuilder<MortgageDbContext>().UseInMemoryDatabase(databaseName:"MortgageDbTest1").Options;
+            var dbContext = new MortgageDbContext(options);
+            Seed(dbContext);
+            
+            var service = new MortgageService(new MortgageRateRepository(dbContext));
+            
+            var rates = service.GetMortgageRates();
 
             Assert.NotEmpty(rates);
             Assert.Equal(12, rates.Count);
@@ -117,14 +112,26 @@ namespace MortgageWebAPITest
         [Fact]
         public void CheckMortgage_MaturityPeriodNotFoundReturnsNull()
         {
-            var res = this._service.CheckMortgage(0, 99, 0, 0);
+            var options = new DbContextOptionsBuilder<MortgageDbContext>().UseInMemoryDatabase(databaseName:"MortgageDbTest2").Options;
+            var dbContext = new MortgageDbContext(options);
+            Seed(dbContext);
+            
+            var service = new MortgageService(new MortgageRateRepository(dbContext));
+            
+            var res = service.CheckMortgage(0, 99, 0, 0);
             Assert.Null(res);
         }
 
         [Fact]
         public void CheckMortgage_ReturnsNotFeasibleResult_IncomeNotEnough()
         {
-            var res = this._service.CheckMortgage(12000, 1, 50000, 150000);
+            var options = new DbContextOptionsBuilder<MortgageDbContext>().UseInMemoryDatabase(databaseName:"MortgageDbTest3").Options;
+            var dbContext = new MortgageDbContext(options);
+            Seed(dbContext);
+            
+            var service = new MortgageService(new MortgageRateRepository(dbContext));
+            
+            var res = service.CheckMortgage(12000, 1, 50000, 150000);
             Assert.NotNull(res);
             Assert.False(res.IsFeasible);
         }
@@ -132,7 +139,13 @@ namespace MortgageWebAPITest
         [Fact]
         public void CheckMortgage_ReturnsNotFeasibleResult_MortgageMoreThanHome()
         {
-            var res = this._service.CheckMortgage(200000, 10, 150000, 160000);
+            var options = new DbContextOptionsBuilder<MortgageDbContext>().UseInMemoryDatabase(databaseName:"MortgageDbTest4").Options;
+            var dbContext = new MortgageDbContext(options);
+            Seed(dbContext);
+            
+            var service = new MortgageService(new MortgageRateRepository(dbContext));
+            
+            var res = service.CheckMortgage(200000, 10, 150000, 160000);
             Assert.NotNull(res);
             Assert.False(res.IsFeasible);
         }
@@ -140,7 +153,13 @@ namespace MortgageWebAPITest
         [Fact]
         public void CheckMortgage_IsFeasible()
         {
-            var res = this._service.CheckMortgage(60000, 10, 200000, 250000);
+            var options = new DbContextOptionsBuilder<MortgageDbContext>().UseInMemoryDatabase(databaseName:"MortgageDbTest5").Options;
+            var dbContext = new MortgageDbContext(options);
+            Seed(dbContext);
+            
+            var service = new MortgageService(new MortgageRateRepository(dbContext));
+            
+            var res = service.CheckMortgage(60000, 10, 200000, 250000);
             Assert.NotNull(res);
             Assert.True(res.IsFeasible);
             Assert.True(Math.Abs(1781.75546 - res.MonthlyCost) < 0.00001);
